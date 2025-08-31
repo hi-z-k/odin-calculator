@@ -8,6 +8,64 @@ let OPERATORS = {
         "÷":(a,b)=> a/b,
 }
 
+let INPUT_KEYS = {
+    "zero": 0,
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "decimal":".",
+    "addition": "+",
+    "subtraction": "-",
+    "multiplication": "*",
+    "division": "/"
+}
+
+function addText(str){
+    const ioSpace = document.querySelector(".IO-outlet")
+    let currentText = ioSpace.textContent 
+    if (currentText !== "0") ioSpace.textContent += str
+    else ioSpace.textContent = str
+}
+function clearText(){
+    const ioSpace = document.querySelector(".IO-outlet")
+    ioSpace.textContent = "0"
+}
+function deleteLastTextEntry(){
+    const ioSpace = document.querySelector(".IO-outlet")
+    let text = ioSpace.textContent.split("")
+    let index = text.length-1
+    let deletedChar = text[index]
+    text.splice(index,1)
+    ioSpace.textContent = text.join("")
+    return deletedChar
+}
+
+
+
+
+const numberButtons = document.querySelectorAll(".number-button,.operation-button")
+//FIXME: the input still can record multiple decimal points
+//TODO: the equals to button is not functional
+numberButtons.forEach(button => 
+    button.addEventListener("click", ()=>{
+        addText(button.textContent);
+    })
+)
+
+const deleteButton = document.querySelector(".function-button.delete")
+deleteButton.addEventListener("click",deleteLastTextEntry)
+
+const clearButton = document.querySelector(".function-button.clear")
+clearButton.addEventListener("click",clearText)
+
+
+
 function ASCII(char){
     if (char.length != 1) return
     return char.charCodeAt(0)
@@ -51,4 +109,3 @@ function mathExpression(string){
 // FIXME:errors around negative values must be solved
 // TODO:change your approach from this, this looks messy
 
-console.log(mathExpression("-22 + - 2333 - 2122 x -244"))
