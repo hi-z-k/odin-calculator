@@ -1,10 +1,14 @@
 // "22+23-21*22" => [22,+,23,-21,*,22]
-
 let OPERATORS = {
         "+":(a,b)=> a+b,
         "-":(a,b)=> a-b,
-        "x":(a,b)=> a*b,
+        "*":(a,b)=> a*b,
         "/":(a,b)=> a/b,
+}
+
+function replaceText(str){
+    clearText()
+    addText(str)
 }
 
 function addText(str){
@@ -19,15 +23,16 @@ function clearText(){
 }
 function deleteLastTextEntry(){
     const ioSpace = document.querySelector(".IO-outlet")
-    let text = ioSpace.textContent.split("")
-    let index = text.length-1
-    if (index <= 0){
+    let text = ioSpace.textContent
+    let textArray = text.split("")
+    let index = textArray.length-1
+    if (index <= 0 || text ==="Invalid"){
         ioSpace.textContent = "0"
         return 0
     }
-    let deletedChar = text[index]
-    text.splice(index,1)
-    ioSpace.textContent = text.join("")
+    let deletedChar = textArray[index]
+    textArray.splice(index,1)
+    ioSpace.textContent = textArray.join("")
     return deletedChar
 }
 
@@ -49,13 +54,34 @@ function addListeners(){
     deleteButton.addEventListener("click",deleteLastTextEntry)
     const clearButton = document.querySelector(".function-button.clear")
     clearButton.addEventListener("click",clearText)
+    const equalButton = document.querySelector(".button.equals")
+    equalButton.addEventListener("click", ()=>{
+        let result;
+        try{
+            result = eval(getMathExpression())
+        }
+        catch (error){
+            result = "Invalid"
+        }
+        finally{
+            replaceText(result)
+        }
+
+    })
+}
+
+function validMathExpression(expressionArr){
+    for (let i = 0; i<expressionArr.length; i++){
+        let element = expressionArr[i]
+        let typ = typeof element
+        console.log(element,typ)
+        if (i % 2 === 0){
+            if(typ !== 'number') return false
+        }
+        else
+            if (!(element in OPERATORS)) return false
+    }
+    return true
 }
 
 addListeners()
-
-
-//FIXME: the input still can record multiple decimal points
-//TODO: the equals to button is not functional
-// FIXME:errors around negative values must be solved
-// TODO:change your approach from this, this looks messy
-
